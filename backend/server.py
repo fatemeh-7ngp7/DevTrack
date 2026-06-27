@@ -255,10 +255,18 @@ async def refresh_token(request: Request, response: Response):
 @api.get("/projects")
 async def list_projects(user: dict = Depends(get_current_user)):
     projects = await db.projects.find({"user_id": user["id"]}, {"_id": 0}).sort("created_at", -1).to_list(500)
+    all_tasks = await db.tasks.find(
+        {"user_id": user["id"]}, {"_id": 0, "project_id": 1, "status": 1}).to_list(20000)
+    counts = {}
+    for t in all_tasks:
+        c = counts.setdefault(t["project_id"], {"total": 0, "done": 0})
+        c["total"] += 1
+        if t.get("status") == "done":
+            c["done"] += 1
     for p in projects:
-        tasks = await db.tasks.find({"project_id": p["id"]}, {"_id": 0, "status": 1}).to_list(2000)
-        p["task_count"] = len(tasks)
-        p["done_count"] = len([t for t in tasks if t.get("status") == "done"])
+        c = counts.get(p["id"], {"total": 0, "done": 0})
+        p["task_count"] = c["total"]
+        p["done_count"] = c["done"]
     return projects
 
 
