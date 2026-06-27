@@ -1,0 +1,76 @@
+{
+  "theme": "dark",
+  "archetype": "Archetype 4 (Swiss & High-Contrast) with Retro-Futurism/Terminal Micro-Theme",
+  "mood": "Technical, precise, dense, command-center. Built for a backend developer who values speed, data density, and keyboard navigation.",
+  "typography": {
+    "headings": {
+      "family": "JetBrains Mono, monospace",
+      "weights": ["400", "700", "800"],
+      "tracking": "tracking-tight",
+      "usage": "Used for all dashboard widgets, metrics, project titles, and Kanban column headers."
+    },
+    "body": {
+      "family": "IBM Plex Sans, sans-serif",
+      "weights": ["400", "500"],
+      "usage": "Used for task descriptions, markdown notes, and dense text to maintain readability."
+    },
+    "scale": {
+      "h1": "text-3xl sm:text-4xl",
+      "h2": "text-xl sm:text-2xl",
+      "h3": "text-lg sm:text-xl",
+      "body": "text-sm sm:text-base",
+      "small": "text-xs tracking-wider uppercase"
+    }
+  },
+  "colors": {
+    "background": "#0A0A0A",
+    "surface_primary": "#141414",
+    "surface_secondary": "#1C1C1C",
+    "border": "#262626",
+    "primary_accent": "#F59E0B",
+    "primary_accent_hover": "#D97706",
+    "success": "#22C55E",
+    "danger": "#EF4444",
+    "text_primary": "#F5F5F5",
+    "text_secondary": "#A3A3A3"
+  },
+  "layout_strategy": {
+    "grid_system": "The 'Control Room' Grid. High density, tight gaps (gap-4 or gap-6). Use strict grid allocations for dashboard.",
+    "borders": "Grid Borders (The 'Technical' Look). Expose the skeleton. Use 1px subtle borders (border-border/40). Remove border-radius on cards or use max 2px.",
+    "spacing": "Dense spacing for data tables and task lists (p-2 to p-4). Generous spacing only for empty states or auth screens.",
+    "alignment": "Left-align all data, stats, and text. Center alignment is banned except for empty state illustrations."
+  },
+  "component_rules": {
+    "cards": "Cardless or flat surfaces with 1px border. No drop shadows. Use a 1px solid border (border-[#262626]). Background should be #141414.",
+    "buttons": "Square edges (rounded-none). High contrast. Primary button: bg-[#F59E0B] text-black hover:bg-[#D97706].",
+    "kanban": "Columns should have visible right borders. Task cards should be draggable, dense, displaying tags and due dates with JetBrains Mono. Use subtle hover state: slightly lighter surface.",
+    "forms": "Inputs should have sharp corners, transparent backgrounds with bottom-border only, or full 1px border. Focus state must be a sharp 1px ring of primary_accent.",
+    "markdown": "Render markdown with tight line height. Use JetBrains Mono for inline code blocks with a slightly lighter grey background (#262626).",
+    "navigation": "Left-side vertical sidebar (Command Center nav) or dense top nav. Active state marked by a left-border primary_accent highlight."
+  },
+  "motion_and_interaction": {
+    "hover_states": "Fast and snappy. No long fades. Changes in background color should be 0.1s. Buttons get a hard translation (e.g., translate-x-0.5 translate-y-0.5) to simulate mechanical pressing.",
+    "micro_interactions": "Use 'Tracing Beam' effect on the active project card or currently tracking task. Use a subtle pulse on the 'Time Tracking' active state.",
+    "page_transitions": "None or instant. Developers prefer speed over animations."
+  },
+  "media": {
+    "image_urls": [
+      {
+        "url": "https://images.pexels.com/photos/12623752/pexels-photo-12623752.jpeg",
+        "category": "auth_background",
+        "description": "Abstract composition showcasing modern architectural elements with dramatic lighting. Use as a darkened, low-opacity background for the login/register screen."
+      }
+    ],
+    "icons": "lucide-react"
+  },
+  "instructions_to_main_agent": [
+    "Strictly follow the color palette. Do not introduce generic blue or purple.",
+    "Install and configure 'JetBrains Mono' and 'IBM Plex Sans' fonts via Google Fonts in index.html or layout.",
+    "Use Shadcn UI components but heavily customize them to remove all border-radius (use rounded-none or rounded-sm max) and drop-shadows. The UI should look flat, technical, and brutalist.",
+    "Ensure all task rows and Kanban cards have 'data-testid' attributes for testing.",
+    "For the Kanban board, implement drag-and-drop using standard React DnD or similar, maintaining the dense, grid-based aesthetic.",
+    "For the Dashboard, use Recharts with the primary_accent (#F59E0B) for lines/bars and #262626 for grid lines. Keep charts minimalist and data-heavy.",
+    "Do not use card components where a simple grid border layout works better. Emphasize the 'Terminal' Micro-Theme with monospace stats.",
+    "Generate all frontend components as .jsx/.js files instead of .tsx/.ts."
+  ]
+}
