@@ -1,0 +1,48 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: pytrack-mongo
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: pytrack-backend
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      MONGO_URL: "mongodb://mongo:27017"
+      DB_NAME: "pytrack"
+      CORS_ORIGINS: "*"
+      JWT_SECRET: "${JWT_SECRET:-change-me-to-a-long-random-hex-string}"
+      ADMIN_EMAIL: "${ADMIN_EMAIL:-admin@pytrack.dev}"
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD:-admin123}"
+      EMERGENT_LLM_KEY: "${EMERGENT_LLM_KEY:-}"
+    ports:
+      - "8001:8001"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Browser talks to the backend on the host, so use localhost here
+        REACT_APP_BACKEND_URL: "${REACT_APP_BACKEND_URL:-http://localhost:8001}"
+    container_name: pytrack-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+
+volumes:
+  mongo_data:
