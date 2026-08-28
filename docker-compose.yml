@@ -1,6 +1,6 @@
 services:
   mongo:
-    image: mongo:7
+    image: docker.arvancloud.ir/mongo:7
     container_name: pytrack-mongo
     restart: unless-stopped
     volumes:

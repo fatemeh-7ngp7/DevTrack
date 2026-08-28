@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM docker.arvancloud.ir/python:3.11-slim
 
 WORKDIR /app
 
@@ -6,10 +6,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential curl && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir emergentintegrations \
-    --extra-index-url https://d33sy5i8bnduwe.cloudfront.net/simple/
-
+RUN pip install --no-cache-dir -r requirements.txt \
+    -i https://pypi.tuna.tsinghua.edu.cn/simple \
+    --trusted-host pypi.tuna.tsinghua.edu.cn
 COPY . .
 
 EXPOSE 8001

@@ -1,5 +1,5 @@
 # --- Build stage ---
-FROM node:20-alpine AS build
+FROM docker.arvancloud.ir/library/node:20-alpine AS build
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ COPY . .
 RUN yarn build
 
 # --- Serve stage ---
-FROM nginx:1.27-alpine
+FROM docker.arvancloud.ir/library/nginx:1.27-alpine
 
 COPY --from=build /app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf

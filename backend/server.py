@@ -23,7 +23,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 from pydantic import BaseModel, Field, EmailStr
 
-from emergentintegrations.llm.chat import LlmChat, UserMessage
+# from emergentintegrations.llm.chat import LlmChat, UserMessage
 
 # --- Object storage ---
 STORAGE_URL = "https://integrations.emergentagent.com/objstore/api/v1/storage"
@@ -507,6 +507,15 @@ async def ai_generate(project_id: str, data: AIGenerateInput, user: dict = Depen
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
 
+    # AI task breakdown is temporarily disabled: emergentintegrations is not
+    # installed and no EMERGENT_LLM_KEY is configured on this deployment.
+    # Fail explicitly instead of crashing later with a NameError on `reply`.
+    if not os.environ.get("EMERGENT_LLM_KEY"):
+        raise HTTPException(
+            status_code=503,
+            detail="AI task breakdown is currently disabled on this deployment.",
+        )
+
     system_msg = (
         "You are a senior engineering project planner. Given a project description, "
         "break it down into clear, actionable tasks for a backend Python developer. "
@@ -516,18 +525,18 @@ async def ai_generate(project_id: str, data: AIGenerateInput, user: dict = Depen
         "\"tags\": [str], \"subtasks\": [{\"title\": str, \"description\": str}]}]}. "
         f"Generate approximately {data.count} top-level tasks. Keep titles concise."
     )
-    chat = LlmChat(
-        api_key=os.environ["EMERGENT_LLM_KEY"],
-        session_id=f"aigen-{project_id}-{uuid.uuid4()}",
-        system_message=system_msg,
-    ).with_model("anthropic", "claude-sonnet-4-6")
+    # chat = LlmChat(
+    #     api_key=os.environ["EMERGENT_LLM_KEY"],
+    #     session_id=f"aigen-{project_id}-{uuid.uuid4()}",
+    #     system_message=system_msg,
+    # ).with_model("anthropic", "claude-sonnet-4-6")
 
-    prompt = f"Project: {project['name']}\nDescription: {project.get('description','')}\nFocus: {data.prompt}"
-    try:
-        reply = await chat.send_message(UserMessage(text=prompt))
-    except Exception as e:
-        logger.error(f"AI generation failed: {e}")
-        raise HTTPException(status_code=502, detail="AI generation failed. Try again.")
+    # prompt = f"Project: {project['name']}\nDescription: {project.get('description','')}\nFocus: {data.prompt}"
+    # try:
+    #     reply = await chat.send_message(UserMessage(text=prompt))
+    # except Exception as e:
+    #     logger.error(f"AI generation failed: {e}")
+    #     raise HTTPException(status_code=502, detail="AI generation failed. Try again.")
 
     text = reply.strip()
     if text.startswith("```"):
